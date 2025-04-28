@@ -1,4 +1,4 @@
-var url = "http://localhost:3300/api/phones";
+var url = "http://localhost:8080/api/phones";
 
 function postPhone() {
   console.log(url);
