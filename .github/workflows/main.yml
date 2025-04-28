@@ -35,6 +35,10 @@ jobs:
       - name: Build Docker image (Test 1)
         run: docker build -t ${{ secrets.DOCKER_USER }}/celularesapipostgres:${{ github.sha }} .
 
+      - name: List Docker images
+        run: docker images
+
+
         
       - name: List Docker images # Listar imágenes locales después del build
         run: docker images
