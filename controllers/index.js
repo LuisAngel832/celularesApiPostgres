@@ -11,12 +11,15 @@ const createPhone = async (req, res) => {
 
 const getAllPhones = async (req, res) => {
   try {
-    const phones = await models.Telefono.findAll();
+    console.log('Entrando a getAllPhones');  // Agrega este log
+    const phones = await models.Telefonos.findAll();
     return res.status(200).json({ telefonos: phones });
   } catch (error) {
+    console.error('Error en getAllPhones:', error); // Agrega esto
     return res.status(500).json({ error: error.message });
   }
 };
+
 
 const updatePhone = async (req, res) => {
   try {

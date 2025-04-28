@@ -1,4 +1,4 @@
-var url = "http://localhost:8080/api/phones";
+var url = "https://celularesapipostgres-latest.onrender.com/api/phones";
 
 function postPhone() {
   console.log(url);
