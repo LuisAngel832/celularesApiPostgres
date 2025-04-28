@@ -7,6 +7,7 @@ on:
 jobs:
   deploy-pg-api:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -30,14 +31,13 @@ jobs:
         run: ls -la
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_USER }}/celularesapipostgres:${{ github.sha }} .
-      
+        run: docker buildx build --tag ${{ secrets.DOCKER_USER }}/celularesapipostgres:${{ github.sha }} .
+
       - name: Docker login
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-      
+
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USER }}/celularesapipostgres:${{ github.sha }}
-
