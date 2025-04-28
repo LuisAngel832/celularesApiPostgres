@@ -14,27 +14,28 @@ jobs:
         with:
           node-version: 20
 
-      - run: echo 'hello world ...'
-      - run: ls -la
+      - name: Preparar archivos
+        run: |
+          echo 'hello world ...'
+          ls -la
+          touch .env
+          echo 'DEV_DATABASE_URL=${{ secrets.PG_CONN }}' >> .env
+          cat .env
 
-      - run: touch .env
-      - run: echo 'DEV_DATABASE_URL=${{ secrets.PG_CONN }}' >> .env
-      - run: cat .env
+      - name: Build Docker image
+        run: docker build -t celularesapipostgres:${{ github.sha }} .
 
-      - run: docker build -t ${{ secrets.DOCKER_USER }}/celularesApiPostgres:${{ github.sha }} .
+      - name: List Docker images
+        run: docker images
 
-      - run: docker images
-
-      - name: docker login
+      - name: Docker login
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
 
-      - name: docker tag
-        run: docker tag ${{ secrets.DOCKER_USER }}/celularesApiPostgres:${{ github.sha }} ${{ secrets.DOCKER_USER }}/celularesApiPostgres:latest
+      - name: Tag Docker image
+        run: docker tag celularesapipostgres:${{ github.sha }} ${{ secrets.DOCKER_USER }}/celularesApiPostgres:${{ github.sha }}
 
-      - name: docker push
-        run: |
-          docker push ${{ secrets.DOCKER_USER }}/celularesApiPostgres:${{ github.sha }}
-          docker push ${{ secrets.DOCKER_USER }}/celularesApiPostgres:latest
+      - name: Push Docker image
+        run: docker push ${{ secrets.DOCKER_USER }}/celularesApiPostgres:${{ github.sha }}
