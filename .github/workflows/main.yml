@@ -19,14 +19,14 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Prepare .env file
+      - name: Preparar archivo .env
         run: |
-          echo 'Creating .env file...'
+          echo 'Creando archivo .env...'
           touch .env
           echo 'DEV_DATABASE_URL=${{ secrets.PG_CONN }}' >> .env
           cat .env
 
-      - name: List project files
+      - name: List files before build
         run: ls -la
 
       - name: Build Docker image
