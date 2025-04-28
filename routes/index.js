@@ -3,7 +3,7 @@ const controllers = require('../controllers');
 
 const router = Router();
 
-router.get('/', (req, res) => res.send('Welcome to API Luis'));
+router.get('/', (req, res) => res.send('Welcome to API Luis an'));
 router.post('/phones', controllers.createPhone);
 router.get('/phones', controllers.getAllPhones);
 router.put('/phones/:id', controllers.updatePhone);
