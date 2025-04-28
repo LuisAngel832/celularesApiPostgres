@@ -30,19 +30,14 @@ jobs:
         run: ls -la
 
       - name: Build Docker image
-        run: docker build -t celularesapipostgres:${{ github.sha }} .
-
-      - name: List Docker images
-        run: docker images
-
+        run: docker build -t ${{ secrets.DOCKER_USER }}/celularesapipostgres:${{ github.sha }} .
+      
       - name: Docker login
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-
-      - name: Tag Docker image for Docker Hub
-        run: docker tag celularesapipostgres:${{ github.sha }} ${{ secrets.DOCKER_USER }}/celularesapipostgres:${{ github.sha }}
-
+      
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USER }}/celularesapipostgres:${{ github.sha }}
+
