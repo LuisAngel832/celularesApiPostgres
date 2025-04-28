@@ -32,10 +32,9 @@ jobs:
           echo "Listando archivos en el directorio de trabajo:"
           ls -la
 
-      - name: Build Docker image # Construir la imagen Docker
-        run: docker build -t ${{ secrets.DOCKER_USER }}/celularesapipostgres:${{ github.sha }} .
-        # El '.' al final indica que el contexto de build es el directorio actual (donde debe estar tu Dockerfile)
-
+      - name: Build Docker image (Test 1)
+        run: docker build .
+        
       - name: List Docker images # Listar imágenes locales después del build
         run: docker images
 
