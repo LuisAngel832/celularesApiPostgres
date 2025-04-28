@@ -8,43 +8,41 @@ jobs:
   deploy-pg-api:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code # Paso para obtener tu código
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js # Paso para configurar Node.js si tu app lo necesita (quizás para algún paso de build frontend, etc.)
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20 # Asegúrate que esta es la versión que necesitas
+          node-version: 20
 
-      - name: Set up Docker Buildx # Paso añadido para configurar Buildx
-        uses: docker/setup-buildx-action@v3 # Usa la versión más reciente disponible
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Preparar archivo .env # Crear el archivo .env con secretos
+      - name: Prepare .env file
         run: |
-          echo 'Creando archivo .env...'
+          echo 'Creating .env file...'
           touch .env
           echo 'DEV_DATABASE_URL=${{ secrets.PG_CONN }}' >> .env
-          echo 'Contenido de .env:'
           cat .env
 
-      - name: List files before build # Paso añadido para verificar archivos antes de construir
-        run: |
-          echo "Listando archivos en el directorio de trabajo:"
-          ls -la
+      - name: List project files
+        run: ls -la
 
-      - name: Build Docker image (Test 1)
-        run: docker build -t ${{ secrets.DOCKER_USER }}/celularesapipostgres:${{ github.sha }} .
+      - name: Build Docker image
+        run: docker build -t celularesapipostgres:${{ github.sha }} .
 
-
-        
-      - name: List Docker images # Listar imágenes locales después del build
+      - name: List Docker images
         run: docker images
 
-      - name: Docker login # Iniciar sesión en Docker Hub (u otro registro)
+      - name: Docker login
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
 
-      - name: Push Docker image # Subir la imagen al registro
+      - name: Tag Docker image for Docker Hub
+        run: docker tag celularesapipostgres:${{ github.sha }} ${{ secrets.DOCKER_USER }}/celularesapipostgres:${{ github.sha }}
+
+      - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USER }}/celularesapipostgres:${{ github.sha }}
